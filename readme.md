@@ -28,3 +28,5 @@ Next, boot up a server and visit your forum. If using a tool like Laravel Valet,
 1. Visit: `http://council.test/register` to register a new forum account.
 2. Edit `config/council.php`, and add any email address that should be marked as an administrator.
 3. Visit: `http://council.test/admin/channels` to seed your forum with one or more channels.
+
+Testing commit body in VS Code
