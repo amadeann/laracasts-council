@@ -30,3 +30,7 @@ Next, boot up a server and visit your forum. If using a tool like Laravel Valet,
 3. Visit: `http://council.test/admin/channels` to seed your forum with one or more channels.
 
 Testing commit body in VS Code
+
+### Step 3
+
+to be continued
