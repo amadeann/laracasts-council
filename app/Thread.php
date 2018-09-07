@@ -11,7 +11,7 @@ class Thread extends Model
 {
     use RecordsActivity, Searchable;
 
-    protected $fillable = ['user_id', 'channel_id', 'title', 'body', 'best_reply_id', 'locked'];
+    protected $fillable = ['user_id', 'channel_id', 'title', 'body', 'best_reply_id', 'slug', 'locked'];
 
     protected $with = ['creator', 'channel'];
 
@@ -34,8 +34,8 @@ class Thread extends Model
         });
 
         static::created(function ($thread) {
-            $thread->slug = $thread->title;
-            $thread->save();
+            $thread->update(['slug' => $thread->title]);
+            $thread->creator->increment('reputation', 10);
         });
     }
 
@@ -129,6 +129,8 @@ class Thread extends Model
     public function markBestReply(Reply $reply)
     {
         $this->update(['best_reply_id' => $reply->id]);
+
+        $reply->owner->increment('reputation', 50);
     }
 
     public function toSearchableArray()

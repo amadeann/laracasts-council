@@ -2,26 +2,32 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 
 class Trending
 {
     public function get()
     {
-        return array_map('json_decode', Redis::zrevrange($this->cacheKey(), 0, 4));
+        return Cache::get($this->cacheKey(), collect())
+                    ->sortByDesc('score')
+                    ->slice(0, 5)
+                    ->values();
     }
 
     public function push(Thread $thread)
     {
-        Redis::zincrby($this->cacheKey(), 1, json_encode([
+        $trending = Cache::get($this->cacheKey(), collect());
+        $trending[$thread->id] = (object) [
+            // 'score' => $this->score($thread) + $increment,
             'title' => $thread->title,
             'path' => $thread->path(),
-        ]));
+        ];
+        Cache::forever($this->cacheKey(), $trending);
     }
 
     public function reset()
     {
-        Redis::del($this->cacheKey());
+        return Cache::forget($this->cacheKey());
     }
 
     public function cacheKey()
